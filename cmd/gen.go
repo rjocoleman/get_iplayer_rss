@@ -96,6 +96,7 @@ var genCmd = &cobra.Command{
 		var episode DownloadHistory
 		shows := make(map[string][]DownloadHistory)
 
+		// pid name episode type timeadded mode filename versions duration desc channel categories thumbnail guidance web episodenum seriesnum
 		for _, entry := range downloadHistory {
 			episode.PID = entry[0]
 			episode.Name = entry[1]
@@ -115,24 +116,24 @@ var genCmd = &cobra.Command{
 			episode.EpisodeNum, _ = strconv.Atoi(entry[15])
 			episode.SeriesNum, _ = strconv.Atoi(entry[16])
 
-			showURL, _ := urlx.Parse(episode.Web)
-			showPID := path.Base(showURL.Path)
-			shows[showPID] = append(shows[showPID], episode)
+			sanatizedShowName := sanitize.Path(episode.Name)
+			shows[sanatizedShowName] = append(shows[sanatizedShowName], episode)
 		}
 
 		fmt.Println("Parsed Shows:", len(shows))
 
 		for _, show := range shows {
 			items := utils.PodcastItems{}
+
+			fmt.Println("Show:", showName)
+			fmt.Println("Parsed Episdoes:", len(show))
+
 			for _, episode := range show {
 				var item utils.PodcastItem
 
 				showName = episode.Name
 				showWeb = episode.Web
 				showChannel = episode.Channel
-
-				fmt.Println("Show:", showName)
-				fmt.Println("Parsed Episdoes:", len(show))
 
 				item.Title = episode.Episode
 				item.ITunesAuthor = episode.Name
@@ -168,8 +169,8 @@ var genCmd = &cobra.Command{
 				os.Exit(-1)
 			}
 
-			outputFilename := sanitize.Path(showName)
-			outputFilepath := path.Join(outputPath, outputFilename) + ".rss"
+			sanatizedShowName := sanitize.Path(showName)
+			outputFilepath := path.Join(outputPath, sanatizedShowName) + ".rss"
 			fmt.Println("Writing:", outputFilepath)
 			err := ioutil.WriteFile(outputFilepath, file.Bytes(), 0755)
 			if err != nil {
