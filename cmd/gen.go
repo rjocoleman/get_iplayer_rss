@@ -32,7 +32,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gogap/types"
 	"github.com/goware/urlx"
 	"github.com/kennygrant/sanitize"
 	"github.com/rjocoleman/get_iplayer_rss/utils"
@@ -139,7 +138,7 @@ var genCmd = &cobra.Command{
 				item.ITunesAuthor = episode.Name
 				item.ITunesSummary = episode.Desc
 				item.ITunesImage.Href = episode.Thumbnail
-				item.PubDate = types.DateTime(time.Unix(episode.TimeAdded, 0))
+				item.PubDate = time.Unix(episode.TimeAdded, 0).Format("Mon, 02 Jan 2006 15:04:05 MST")
 
 				_, filename := filepath.Split(episode.Filename)
 				webUrl, _ := urlx.Parse(url)
