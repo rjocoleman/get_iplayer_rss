@@ -3,7 +3,6 @@ package utils
 import (
 	"encoding/xml"
 
-	"github.com/gogap/types"
 )
 
 // PodcastRSS ...
@@ -54,7 +53,7 @@ type PodcastItem struct {
 		Type   string `xml:"type,attr,omitempty"`
 	} `xml:"enclosure,omitempty"`
 	GUID           string         `xml:"guid,omitempty"`
-	PubDate        types.DateTime `xml:"pubDate,omitempty"`
+	PubDate        string         `xml:"pubDate,omitempty"`
 	ITunesDuration string         `xml:"itunes:duration,omitempty"`
 }
 
